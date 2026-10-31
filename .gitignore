@@ -1,0 +1,62 @@
+.env
+.env.*
+!.env.example
+
+.venv/
+venv/
+**/.venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.hypothesis/
+.cache/
+htmlcov/
+.coverage
+coverage.xml
+build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+__pypackages__/
+
+# Keep locally generated source-corpus and retrieval artifacts out of Git.
+/data/*
+!/data/README.md
+
+# Evaluation datasets and generated golden data stay local pending provenance review.
+/datasets/*
+!/datasets/goldens/
+/datasets/goldens/*
+!/datasets/goldens/README.md
+
+# Keep raw reports local; allow only the reviewed aggregate summary.
+/reports/*
+!/reports/final_rag_evaluation_report.md
+!/reports/public/
+/reports/public/*
+!/reports/public/README.md
+
+# Model weights, tokenizer files, and local model configuration are not
+# redistributed until their licenses and provenance have been confirmed.
+/models/**
+!/models/README.md
+
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.onnx
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+Thumbs.db
+.DS_Store

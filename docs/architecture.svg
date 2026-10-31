@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title description">
+  <title id="title">RAG and Llama Guard 2 project architecture</title>
+  <desc id="description">The RAG application checks user input, retrieves context from a MiniLM and FAISS index, generates an answer with Ollama, and checks output with Llama Guard 2. Separate RAG and guardrail evaluation flows produce metrics and reports.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#526581"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#356ac3"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #17243b; }
+      .title { font-size: 34px; font-weight: 700; }
+      .subtitle { font-size: 17px; fill: #526581; }
+      .section { font-size: 22px; font-weight: 700; }
+      .box-title { font-size: 17px; font-weight: 700; }
+      .box-sub { font-size: 14px; fill: #526581; }
+      .small { font-size: 14px; fill: #526581; }
+      .arrow { fill: none; stroke: #526581; stroke-width: 2.5; marker-end: url(#arrow); }
+      .blue-arrow { fill: none; stroke: #356ac3; stroke-width: 2.5; marker-end: url(#arrow-blue); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1080" fill="#ffffff"/>
+  <text x="60" y="58" class="title">RAG + Llama Guard 2</text>
+  <text x="60" y="88" class="subtitle">Application workflow and independent evaluation paths</text>
+
+  <rect x="50" y="112" width="1500" height="472" rx="18" fill="#f4f7fc" stroke="#d7dfed" stroke-width="2"/>
+  <text x="80" y="151" class="section">Interactive application</text>
+
+  <g>
+    <rect x="80" y="184" width="190" height="96" rx="12" fill="#ffffff" stroke="#9aabc5" stroke-width="2"/>
+    <text x="175" y="222" text-anchor="middle" class="box-title">User query</text>
+    <text x="175" y="249" text-anchor="middle" class="box-sub">Question</text>
+
+    <rect x="310" y="184" width="190" height="96" rx="12" fill="#fff3e8" stroke="#e8a35d" stroke-width="2"/>
+    <text x="405" y="218" text-anchor="middle" class="box-title">Input guardrail</text>
+    <text x="405" y="244" text-anchor="middle" class="box-sub">Llama Guard 2 · Ollama</text>
+    <text x="405" y="263" text-anchor="middle" class="box-sub">Block unless SAFE</text>
+
+    <rect x="540" y="184" width="200" height="96" rx="12" fill="#eaf2ff" stroke="#6b91d2" stroke-width="2"/>
+    <text x="640" y="218" text-anchor="middle" class="box-title">Retrieve top 3</text>
+    <text x="640" y="244" text-anchor="middle" class="box-sub">MiniLM · 384 dimensions</text>
+    <text x="640" y="263" text-anchor="middle" class="box-sub">FAISS cosine search</text>
+
+    <rect x="780" y="184" width="220" height="96" rx="12" fill="#eaf7f0" stroke="#6bab86" stroke-width="2"/>
+    <text x="890" y="218" text-anchor="middle" class="box-title">Generate answer</text>
+    <text x="890" y="244" text-anchor="middle" class="box-sub">Retrieved context + question</text>
+    <text x="890" y="263" text-anchor="middle" class="box-sub">Ollama · qwen2.5:3b</text>
+
+    <rect x="1040" y="184" width="190" height="96" rx="12" fill="#fff3e8" stroke="#e8a35d" stroke-width="2"/>
+    <text x="1135" y="218" text-anchor="middle" class="box-title">Output guardrail</text>
+    <text x="1135" y="244" text-anchor="middle" class="box-sub">Llama Guard 2 · Ollama</text>
+    <text x="1135" y="263" text-anchor="middle" class="box-sub">Withhold unless SAFE</text>
+
+    <rect x="1270" y="184" width="190" height="96" rx="12" fill="#eaf7f0" stroke="#6bab86" stroke-width="2"/>
+    <text x="1365" y="222" text-anchor="middle" class="box-title">Final response</text>
+    <text x="1365" y="249" text-anchor="middle" class="box-sub">Shown only if safe</text>
+
+    <path d="M270 232 H310" class="arrow"/>
+    <path d="M500 232 H540" class="arrow"/>
+    <path d="M740 232 H780" class="arrow"/>
+    <path d="M1000 232 H1040" class="arrow"/>
+    <path d="M1230 232 H1270" class="arrow"/>
+  </g>
+
+  <text x="80" y="343" class="section">Indexed document data</text>
+  <g>
+    <rect x="220" y="376" width="190" height="82" rx="12" fill="#ffffff" stroke="#9aabc5" stroke-width="2"/>
+    <text x="315" y="411" text-anchor="middle" class="box-title">Source document</text>
+    <text x="315" y="437" text-anchor="middle" class="box-sub">Local authorized corpus</text>
+
+    <rect x="500" y="376" width="190" height="82" rx="12" fill="#ffffff" stroke="#9aabc5" stroke-width="2"/>
+    <text x="595" y="411" text-anchor="middle" class="box-title">Chunking</text>
+    <text x="595" y="437" text-anchor="middle" class="box-sub">500 chars · overlap 75</text>
+
+    <rect x="780" y="376" width="190" height="82" rx="12" fill="#ffffff" stroke="#6b91d2" stroke-width="2"/>
+    <text x="875" y="411" text-anchor="middle" class="box-title">Embeddings</text>
+    <text x="875" y="437" text-anchor="middle" class="box-sub">all-MiniLM-L6-v2</text>
+
+    <rect x="1060" y="376" width="190" height="82" rx="12" fill="#ffffff" stroke="#6b91d2" stroke-width="2"/>
+    <text x="1155" y="411" text-anchor="middle" class="box-title">FAISS index</text>
+    <text x="1155" y="437" text-anchor="middle" class="box-sub">19 normalized vectors</text>
+
+    <path d="M410 417 H500" class="arrow"/>
+    <path d="M690 417 H780" class="arrow"/>
+    <path d="M970 417 H1060" class="arrow"/>
+    <path d="M1155 376 V322 H640 V286" class="blue-arrow" stroke-dasharray="7 6"/>
+  </g>
+  <text x="865" y="313" text-anchor="middle" class="small">Prebuilt index is searched by the retriever</text>
+
+  <rect x="50" y="610" width="730" height="360" rx="18" fill="#f4f7fc" stroke="#d7dfed" stroke-width="2"/>
+  <text x="80" y="651" class="section">RAG evaluation</text>
+  <g>
+    <rect x="80" y="700" width="190" height="112" rx="12" fill="#ffffff" stroke="#9aabc5" stroke-width="2"/>
+    <text x="175" y="739" text-anchor="middle" class="box-title">Ground truth</text>
+    <text x="175" y="766" text-anchor="middle" class="box-sub">Questions + relevant</text>
+    <text x="175" y="787" text-anchor="middle" class="box-sub">chunk labels</text>
+
+    <rect x="315" y="700" width="205" height="112" rx="12" fill="#eaf2ff" stroke="#6b91d2" stroke-width="2"/>
+    <text x="417" y="739" text-anchor="middle" class="box-title">RAG evaluators</text>
+    <text x="417" y="766" text-anchor="middle" class="box-sub">Retrieval · context ·</text>
+    <text x="417" y="787" text-anchor="middle" class="box-sub">generation · pipeline</text>
+
+    <rect x="565" y="700" width="185" height="112" rx="12" fill="#eaf7f0" stroke="#6bab86" stroke-width="2"/>
+    <text x="657" y="739" text-anchor="middle" class="box-title">Local RAG reports</text>
+    <text x="657" y="766" text-anchor="middle" class="box-sub">Hit Rate · P@K · R@K</text>
+    <text x="657" y="787" text-anchor="middle" class="box-sub">MRR · judge scores</text>
+
+    <path d="M270 756 H315" class="arrow"/>
+    <path d="M520 756 H565" class="arrow"/>
+  </g>
+  <text x="80" y="866" class="small">Separate datasets and judge runs; no nDCG implementation found.</text>
+  <text x="80" y="893" class="small">Retrieval metrics depend on locally supplied data.</text>
+
+  <rect x="820" y="610" width="730" height="360" rx="18" fill="#f4f7fc" stroke="#d7dfed" stroke-width="2"/>
+  <text x="850" y="651" class="section">Guardrail evaluation</text>
+  <g>
+    <rect x="850" y="700" width="190" height="112" rx="12" fill="#ffffff" stroke="#9aabc5" stroke-width="2"/>
+    <text x="945" y="739" text-anchor="middle" class="box-title">Labeled dataset</text>
+    <text x="945" y="766" text-anchor="middle" class="box-sub">Labeled safety</text>
+    <text x="945" y="787" text-anchor="middle" class="box-sub">test cases</text>
+
+    <rect x="1085" y="700" width="205" height="112" rx="12" fill="#fff3e8" stroke="#e8a35d" stroke-width="2"/>
+    <text x="1187" y="739" text-anchor="middle" class="box-title">Guard predictions</text>
+    <text x="1187" y="766" text-anchor="middle" class="box-sub">Llama Guard 2</text>
+    <text x="1187" y="787" text-anchor="middle" class="box-sub">input classification</text>
+
+    <rect x="1335" y="700" width="185" height="112" rx="12" fill="#eaf7f0" stroke="#6bab86" stroke-width="2"/>
+    <text x="1427" y="739" text-anchor="middle" class="box-title">Local safety report</text>
+    <text x="1427" y="766" text-anchor="middle" class="box-sub">Classification metrics</text>
+    <text x="1427" y="787" text-anchor="middle" class="box-sub">+ false-negative review</text>
+
+    <path d="M1040 756 H1085" class="arrow"/>
+    <path d="M1290 756 H1335" class="arrow"/>
+  </g>
+  <text x="850" y="866" class="small">Historical input metrics are summarized; raw case report is not bundled.</text>
+  <text x="850" y="893" class="small">Output labels and live end-to-end Guard results are not available.</text>
+
+  <text x="60" y="1030" class="small">Workflow diagram only; datasets and raw case-level reports are omitted; aggregate results are documented.</text>
+</svg>
